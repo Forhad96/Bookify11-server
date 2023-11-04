@@ -1,6 +1,6 @@
 const express = require("express");
 require("dotenv").config();
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -51,17 +51,31 @@ run().catch(console.dir);
 // Assignment 11::Database
 const database =client.db('hotelDB')
 // Database::Collection
-const coffeesCollection = database.collection('rooms')
+const roomsCollection = database.collection('rooms')
 
 
 
 // Get::Method
 
+//Get::All_Rooms
 app.get('/rooms',async(req,res)=>{
   try{
     // const review = req.query.reviews
-    const result = await coffeesCollection.find().toArray()
+    const result = await roomsCollection.find().toArray()
     res.send(result)
+  }catch(error){
+    console.log(error);
+  }
+})
+//Get::Single_Room
+app.get('/rooms/:id',async(req,res)=>{
+  try{
+    const id = req.params.id
+    console.log(typeof id);
+    const query = {_id: new ObjectId(id)}
+    const result = await roomsCollection.findOne(query)
+    res.send(result)
+
   }catch(error){
     console.log(error);
   }
