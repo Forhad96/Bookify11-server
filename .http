@@ -1,1 +1,9 @@
-GET http://localhost:3000/rooms?minPrice=100&maxPrice=1200
+# GET http://localhost:3000/rooms?minPrice=100&maxPrice=130
+GET http://localhost:3000/rooms
+# POST http://localhost:3000/rooms/65468ba72c31b3dff3acba70
+# content-type: application/json
+
+# {
+#   "name": "John Doe",
+#   "email": "john.doe@example.com"
+# }

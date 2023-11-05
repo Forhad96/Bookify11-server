@@ -1,8 +1,20 @@
 const express = require("express");
 require("dotenv").config();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 3000;
+
+
+
+// middleware
+app.use(cors())
+app.use(express.json())
+
+
+
+
+
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.shhvx1o.mongodb.net/?retryWrites=true&w=majority`;
 
@@ -58,8 +70,8 @@ const roomsCollection = database.collection("rooms");
 app.get("/rooms", async (req, res) => {
   try {
     const query = {}
- const minPrice = parseFloat(req.query.minPrice); // Convert to number
- const maxPrice = parseFloat(req.query.maxPrice); // Convert to number
+ const minPrice = Number(req.query.minPrice);
+ const maxPrice = Number(req.query.maxPrice);
 
 //  if (isNaN(minPrice) || isNaN(maxPrice)) {
 //    return res.status(400).json({ error: "Invalid price range parameters" });
@@ -95,6 +107,23 @@ app.get("/rooms/:id", async (req, res) => {
 });
 
 // Post::Method
+app.post('/rooms/:id',async(req,res)=>{
+  try{
+    const query = {_id: new ObjectId(req.params.id)}
+    const review = req.body;
+    // const options = {upsert:true}
+    const newReview = {
+      $push: { reviews: review },
+    };
+
+const result = await roomsCollection.updateOne(query,newReview)
+res.send(result)
+console.log(query,review);
+  }catch(error){
+    console.log(error);
+  }
+})
+
 // Put::Method
 // Patch::Method
 // Delete::Method
