@@ -1,5 +1,5 @@
 # GET http://localhost:3000/rooms?minPrice=100&maxPrice=130
-GET http://localhost:3000/rooms
+GET http://localhost:3000/rooms/65468ba72c31b3dff3acba70
 # POST http://localhost:3000/rooms/65468ba72c31b3dff3acba70
 # content-type: application/json
 
