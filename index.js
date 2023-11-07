@@ -167,7 +167,7 @@ app.post("/rooms/:reviewId", async (req, res) => {
 
     const result = await roomsCollection.updateOne(query, newReview);
     res.send(result);
-    console.log(query, review);
+  
   } catch (error) {
     console.log(error);
   }
@@ -175,6 +175,22 @@ app.post("/rooms/:reviewId", async (req, res) => {
 
 // Put::Method
 // Patch::Method
+
+// update Availability value
+app.patch(`/rooms/:id`,async(req,res)=>{
+  console.log(req.params.id);
+  const query={_id:new ObjectId(req.params.id)}
+  const availability = req.body
+  const newAvailability = {
+    $set: {
+      availability
+    },
+  };
+  const result = await roomsCollection.updateOne(query,newAvailability)
+  console.log(result);
+  res.send(result)
+})
+
 // Delete::Method
 
 // delete booking data

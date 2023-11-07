@@ -2,9 +2,11 @@
 # # GET http://localhost:3000/rooms/65468ba72c31b3dff3acba70
 # POST http://localhost:5000/bookings
 # content-type: application/json
+PATCH  http://localhost:5000/rooms/6548ffa32c31b3dff36d33db
+content-type: application/json
 
-# {
-#   "name": "John Doe",
-#   "email": "john.doe@example.com"
-# }
+{
+  "name": "John Doe",
+  "email": "john.doe@example.com"
+}
 
