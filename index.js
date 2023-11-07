@@ -177,6 +177,18 @@ app.post("/rooms/:reviewId", async (req, res) => {
 // Patch::Method
 // Delete::Method
 
+// delete booking data
+app.delete(`/bookings/:id`,async(req,res)=>{
+  try{
+    const query = { _id: new ObjectId(req.params.id) };
+    const result =await bookingsCollection.deleteOne(query)
+    res.send(result)
+
+  }catch(error){
+    console.log(error);
+  }
+})
+
 app.get("/", (req, res) => {
   res.send("bookify is running");
 });
