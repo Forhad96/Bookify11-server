@@ -10,7 +10,7 @@ const port = process.env.PORT || 5000;
 // middleware
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: ["https://bookify007.web.app", "http://localhost:5173"],
     credentials: true,
   })
 );
@@ -51,7 +51,7 @@ const verifyToken = (req, res, next) => {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
@@ -70,6 +70,7 @@ run().catch(console.dir);
 const database = client.db("hotelDB");
 // Database::Collection
 const roomsCollection = database.collection("rooms");
+const bookingsCollection = database.collection('bookings')
 
     // Auth related api
     app.post("/jwt", async (req, res) => {
@@ -138,6 +139,13 @@ app.get("/rooms/:id", async (req, res) => {
     console.log(error);
   }
 });
+
+// Post::method
+app.post('/bookings',async(req,res)=>{
+  const booking = req.body
+  const result = await bookingsCollection.insertOne(booking)
+  res.send(result)
+})
 
 
 // add new review api
