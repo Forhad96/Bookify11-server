@@ -65,36 +65,34 @@ async function run() {
 }
 run().catch(console.dir);
 
-
 //  bookify::Database
 const database = client.db("hotelDB");
 // Database::Collection
 const roomsCollection = database.collection("rooms");
-const bookingsCollection = database.collection('bookings')
+const bookingsCollection = database.collection("bookings");
 
-    // Auth related api
-    app.post("/jwt", async (req, res) => {
-      const user = req.body;
-      const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: "1h",
-      });
-      res
-        .cookie("token", token, {
-          httpOnly: true,
-          secure: true,
-          sameSite: "none",
-        })
-        .send({ success: true });
-      // console.log({ token });
-      console.log(user);
-    });
+// Auth related api
+app.post("/jwt", async (req, res) => {
+  const user = req.body;
+  const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+    expiresIn: "1h",
+  });
+  res
+    .cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    })
+    .send({ success: true });
+  // console.log({ token });
+  console.log(user);
+});
 
-    app.post("/logout", async (req, res) => {
-      const user = req.body;
-      // console.log(user);
-      res.clearCookie("token", { maxAge: 0 }).send({ success: true });
-    });
-
+app.post("/logout", async (req, res) => {
+  const user = req.body;
+  // console.log(user);
+  res.clearCookie("token", { maxAge: 0 }).send({ success: true });
+});
 
 // DataBase Related api
 
@@ -139,14 +137,24 @@ app.get("/rooms/:id", async (req, res) => {
     console.log(error);
   }
 });
+// get all bookings
+app.get("/bookings", async (req, res) => {
+  try {
+    const result = await bookingsCollection.find().toArray();
+    res.send(result);
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 // Post::method
-app.post('/bookings',async(req,res)=>{
-  const booking = req.body
-  const result = await bookingsCollection.insertOne(booking)
-  res.send(result)
-})
-
+app.post("/bookings", async (req, res) => {
+  try {
+    const booking = req.body;
+    const result = await bookingsCollection.insertOne(booking);
+    res.send(result);
+  } catch (error) {}
+});
 
 // add new review api
 app.post("/rooms/:reviewId", async (req, res) => {
@@ -168,9 +176,6 @@ app.post("/rooms/:reviewId", async (req, res) => {
 // Put::Method
 // Patch::Method
 // Delete::Method
-
-
-
 
 app.get("/", (req, res) => {
   res.send("bookify is running");
