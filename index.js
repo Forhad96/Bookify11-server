@@ -3,7 +3,7 @@ const cors = require("cors");
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 require("dotenv").config();
 var jwt = require("jsonwebtoken");
-// const cookieParser = require("cookie-parser");
+const cookieParser = require("cookie-parser");
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -15,7 +15,7 @@ app.use(
   })
 );
 app.use(express.json());
-// app.use(cookieParser());
+app.use(cookieParser());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.shhvx1o.mongodb.net/?retryWrites=true&w=majority`;
 
@@ -29,10 +29,7 @@ const client = new MongoClient(uri, {
 });
 
 // my created middle ware
-const logger = (req, res, next) => {
-  console.log("middleman information", req.method, req.url);
-  next();
-};
+
 
 const verifyToken = (req, res, next) => {
   const token = req.cookies.token;
@@ -137,10 +134,19 @@ app.get("/rooms/:id", async (req, res) => {
     console.log(error);
   }
 });
-// get all bookings
-app.get("/bookings", async (req, res) => {
+// get all bookings localhost:5000/bookings
+// and get user specific data via email localhost:5000/bookings?email=teamdot@gamil.com
+
+http: app.get("/bookings", verifyToken, async (req, res) => {
   try {
-    const result = await bookingsCollection.find().toArray();
+    if(req.user.email !== req.query.email){
+      return res.status(403).send({ message: "Forbidden Access" });
+    }
+    let query = {};
+    if (req.query?.email) {
+      query = { email: req.query.email };
+    }
+    const result = await bookingsCollection.find(query).toArray();
     res.send(result);
   } catch (error) {
     console.log(error);
@@ -178,17 +184,25 @@ app.post("/rooms/:reviewId", async (req, res) => {
 
 // update Availability value
 app.patch(`/rooms/:id`,async(req,res)=>{
-  console.log(req.params.id);
-  const query={_id:new ObjectId(req.params.id)}
-  const availability = req.body
-  const newAvailability = {
-    $set: {
-      availability
-    },
-  };
-  const result = await roomsCollection.updateOne(query,newAvailability)
-  console.log(result);
-  res.send(result)
+
+try{
+    const dateObj = req.body
+    const query = { _id: new ObjectId(req.params.id) };
+    const availability = Number(req.query.availability);
+    const newAvailability = {
+      $set: {
+        availability,
+        bookedDates:[dateObj]
+      },
+    };
+    const result = await roomsCollection.updateOne(query, newAvailability);
+
+    res.send(result);
+    console.log(result);
+}catch(error){
+  console.log(error);
+}
+ 
 })
 
 // Delete::Method
@@ -197,7 +211,7 @@ app.patch(`/rooms/:id`,async(req,res)=>{
 app.delete(`/bookings/:id`,async(req,res)=>{
   try{
     const query = { _id: new ObjectId(req.params.id) };
-    const result =await bookingsCollection.deleteOne(query)
+    const result = await bookingsCollection.deleteOne(query)
     res.send(result)
 
   }catch(error){

@@ -4,9 +4,11 @@
 # content-type: application/json
 PATCH  http://localhost:5000/rooms/6548ffa32c31b3dff36d33db
 content-type: application/json
+["3"]
 
-{
-  "name": "John Doe",
-  "email": "john.doe@example.com"
-}
+
+# {
+#   "name": "John Doe",
+#   "email": "john.doe@example.com"
+# }
 
