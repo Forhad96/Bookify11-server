@@ -139,9 +139,9 @@ app.get("/rooms/:id", async (req, res) => {
 
 http: app.get("/bookings", verifyToken, async (req, res) => {
   try {
-    // if(req.user.email !== req.query.email){
-    //   return res.status(403).send({ message: "Forbidden Access" });
-    // }
+    if(req.user.email !== req.query.email){
+      return res.status(403).send({ message: "Forbidden Access" });
+    }
     let query = {};
     if (req.query?.email) {
       query = { email: req.query.email };
