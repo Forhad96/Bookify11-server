@@ -1,14 +1,14 @@
 # GET http://localhost:3000/rooms?minPrice=100&maxPrice=130
 # # GET http://localhost:3000/rooms/65468ba72c31b3dff3acba70
-# POST http://localhost:5000/bookings
+# PATCH  http://localhost:5000/rooms/6548ffa32c31b3dff36d33db
 # content-type: application/json
-PATCH  http://localhost:5000/rooms/6548ffa32c31b3dff36d33db
+# ["3"]
+
+POST http://localhost:5000/rooms/6548ffa32c31b3dff36d33da
 content-type: application/json
-["3"]
 
-
-# {
-#   "name": "John Doe",
-#   "email": "john.doe@example.com"
-# }
+{
+  "name": "John Doe ggdgfdgfg",
+  "email": "john.doe@example.com"
+}
 

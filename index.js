@@ -139,9 +139,9 @@ app.get("/rooms/:id", async (req, res) => {
 
 http: app.get("/bookings", verifyToken, async (req, res) => {
   try {
-    if(req.user.email !== req.query.email){
-      return res.status(403).send({ message: "Forbidden Access" });
-    }
+    // if(req.user.email !== req.query.email){
+    //   return res.status(403).send({ message: "Forbidden Access" });
+    // }
     let query = {};
     if (req.query?.email) {
       query = { email: req.query.email };
@@ -165,7 +165,8 @@ app.post("/bookings", async (req, res) => {
 // add new review api
 app.post("/rooms/:reviewId", async (req, res) => {
   try {
-    const query = { _id: new ObjectId(req.params.id) };
+    
+    const query = { _id: new ObjectId(req.params.reviewId) };
     const review = req.body;
     const newReview = {
       $push: { reviews: review },
@@ -173,6 +174,7 @@ app.post("/rooms/:reviewId", async (req, res) => {
 
     const result = await roomsCollection.updateOne(query, newReview);
     res.send(result);
+    console.log(query,review);
   
   } catch (error) {
     console.log(error);
