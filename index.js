@@ -30,7 +30,6 @@ const client = new MongoClient(uri, {
 
 // my created middle ware
 
-
 const verifyToken = (req, res, next) => {
   const token = req.cookies.token;
   if (!token) {
@@ -139,7 +138,7 @@ app.get("/rooms/:id", async (req, res) => {
 
 http: app.get("/bookings", verifyToken, async (req, res) => {
   try {
-    if(req.user.email !== req.query.email){
+    if (req.user.email !== req.query.email) {
       return res.status(403).send({ message: "Forbidden Access" });
     }
     let query = {};
@@ -165,7 +164,6 @@ app.post("/bookings", async (req, res) => {
 // add new review api
 app.post("/rooms/:reviewId", async (req, res) => {
   try {
-    
     const query = { _id: new ObjectId(req.params.reviewId) };
     const review = req.body;
     const newReview = {
@@ -174,52 +172,49 @@ app.post("/rooms/:reviewId", async (req, res) => {
 
     const result = await roomsCollection.updateOne(query, newReview);
     res.send(result);
-    console.log(query,review);
-  
+    console.log(query, review);
   } catch (error) {
     console.log(error);
   }
 });
 
 // Put::Method
+
 // Patch::Method
 
 // update Availability value
-app.patch(`/rooms/:id`,async(req,res)=>{
-
-try{
-    const dateObj = req.body
+app.patch(`/rooms/:id`, async (req, res) => {
+  try {
+    const dateObj = req.body;
     const query = { _id: new ObjectId(req.params.id) };
     const availability = Number(req.query.availability);
     const newAvailability = {
       $set: {
         availability,
-        bookedDates:[dateObj]
+        bookedDates: [dateObj],
       },
     };
     const result = await roomsCollection.updateOne(query, newAvailability);
 
     res.send(result);
-    console.log(result);
-}catch(error){
-  console.log(error);
-}
- 
-})
+    console.log(availability);
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 // Delete::Method
 
 // delete booking data
-app.delete(`/bookings/:id`,async(req,res)=>{
-  try{
+app.delete(`/bookings/:id`, async (req, res) => {
+  try {
     const query = { _id: new ObjectId(req.params.id) };
-    const result = await bookingsCollection.deleteOne(query)
-    res.send(result)
-
-  }catch(error){
+    const result = await bookingsCollection.deleteOne(query);
+    res.send(result);
+  } catch (error) {
     console.log(error);
   }
-})
+});
 
 app.get("/", (req, res) => {
   res.send("bookify is running");
