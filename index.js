@@ -64,6 +64,7 @@ run().catch(console.dir);
 //  bookify::Database
 const database = client.db("hotelDB");
 // Database::Collection
+const hotelsCollection = database.collection("hotels");
 const roomsCollection = database.collection("rooms");
 const bookingsCollection = database.collection("bookings");
 
@@ -93,6 +94,27 @@ app.post("/logout", async (req, res) => {
 // DataBase Related api
 
 // Get::Method
+
+// get all hotels
+app.get("/hotels", async (req, res) => {
+  try {
+    const result = await hotelsCollection.find().toArray();
+    res.send(result);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+// GET single hotel
+app.get("/hotels/:id", async (req, res) => {
+  try {
+    const query = { _id: new ObjectId(req.params.id) };
+    const result = await hotelsCollection.findOne(query);
+    res.send(result);
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 //All_Rooms http://localhost:3000/rooms
 //Filter room by price range http://localhost:3000/rooms?minPrice=200&maxPrice=400
